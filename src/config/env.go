@@ -11,6 +11,9 @@ var DBFile string
 var BaseDir string
 
 var NasaAPIKey string
+var FileupAPIKey string
+
+var FileupUsername string
 
 func init() {
 	currentFile, err := os.Executable()
@@ -26,4 +29,7 @@ func init() {
 	DBFile = os.Getenv("DB_FILE")
 
 	NasaAPIKey = os.Getenv("NASA_API_KEY")
+
+	FileupAPIKey = os.Getenv("FILEUP_API_KEY")
+	FileupUsername = os.Getenv("FILEUP_USERNAME")
 }
