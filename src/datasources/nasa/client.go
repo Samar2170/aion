@@ -3,7 +3,10 @@ package nasa
 import (
 	"aion/config"
 	"aion/pkg/client"
+	"aion/pkg/logging"
+	"aion/pkg/utils"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/url"
 	"path/filepath"
@@ -38,7 +41,11 @@ type AstronomyPhotoOfTheDayResponse struct {
 	Url         string `json:"url"`
 }
 
-func (nc NasaClient) FetchAstronomyPhotoOfTheDay() (AstronomyPhotoOfTheDayResponse, error) {
+func (nc NasaClient) FetchAstronomyPhotoOfTheDay(dateString string) (AstronomyPhotoOfTheDayResponse, error) {
+	checkDateFormat := utils.CheckDateFormat(dateString, "2006-01-02")
+	if !checkDateFormat {
+		return AstronomyPhotoOfTheDayResponse{}, errors.New("invalid date format")
+	}
 	subUrl := "planetary/apod"
 	request := http.Request{
 		Method: "GET",
@@ -52,8 +59,9 @@ func (nc NasaClient) FetchAstronomyPhotoOfTheDay() (AstronomyPhotoOfTheDayRespon
 		},
 	}
 
-	response, err := http.DefaultClient.Do(&request)
+	response, err := nc.Client.Do(&request)
 	if err != nil {
+		logging.ErrorLogger.Println(err)
 		return AstronomyPhotoOfTheDayResponse{}, err
 	}
 

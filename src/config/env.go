@@ -2,7 +2,6 @@ package config
 
 import (
 	"os"
-	"path/filepath"
 
 	"github.com/joho/godotenv"
 )
@@ -16,14 +15,13 @@ var FileupAPIKey string
 var FileupUsername string
 
 func init() {
-	currentFile, err := os.Executable()
-	if err != nil {
-		panic(err)
-	}
-	BaseDir = filepath.Dir(currentFile)
+	// currentFile, err := os.Executable()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// BaseDir = filepath.Dir(filepath.Dir(currentFile))
 
-	BaseDir = filepath.Dir(currentFile)
-	// BaseDir = "/Users/samararora/Desktop/fileup-backend/"
+	BaseDir = "/Users/samararora/Desktop/PROJECTS/aion"
 	godotenv.Load(BaseDir + "/.env")
 
 	DBFile = os.Getenv("DB_FILE")

@@ -55,7 +55,7 @@ func (fc *FileupClient) UploadFile(r io.Reader, fileName string) error {
 		return err
 	}
 	req.Header.Set("X-API-Key", fc.Client.ApiKey)
-	response, err := http.DefaultClient.Do(req)
+	response, err := fc.Client.Do(req)
 	if err != nil {
 		logging.ErrorLogger.Error().Err(err)
 		return err
@@ -83,7 +83,7 @@ func (fc *FileupClient) GetFileUrl(fileName string) (string, error) {
 		return "", err
 	}
 	request.Header.Set("X-API-Key", fc.Client.ApiKey)
-	response, err := http.DefaultClient.Do(request)
+	response, err := fc.Client.Do(request)
 	if err != nil {
 		logging.ErrorLogger.Error().Err(err)
 		return "", err
