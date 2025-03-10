@@ -30,14 +30,14 @@ type RequestLog struct {
 
 func (c *Client) Do(request *http.Request) (*http.Response, error) {
 	response, err := http.DefaultClient.Do(request)
+	if err != nil {
+		logging.ErrorLogger.Error().Err(err)
+		return nil, err
+	}
 	rq := RequestLog{
 		Url:        request.URL.String(),
 		StatusCode: response.StatusCode,
 		Time:       time.Now(),
-	}
-	if err != nil {
-		logging.ErrorLogger.Error().Err(err)
-		return nil, err
 	}
 	err = db.DB.Create(&rq).Error
 	if err != nil {

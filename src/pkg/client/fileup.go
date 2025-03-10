@@ -55,6 +55,7 @@ func (fc *FileupClient) UploadFile(r io.Reader, fileName string) error {
 		return err
 	}
 	req.Header.Set("X-API-Key", fc.Client.ApiKey)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 	response, err := fc.Client.Do(req)
 	if err != nil {
 		logging.ErrorLogger.Error().Err(err)
