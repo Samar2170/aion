@@ -4,11 +4,9 @@ import (
 	"aion/config"
 	"aion/pkg/client"
 	"aion/pkg/logging"
-	"aion/pkg/utils"
 	"encoding/json"
 	"errors"
 	"net/http"
-	"net/url"
 	"path/filepath"
 )
 
@@ -21,7 +19,7 @@ func NewNasaClient() *NasaClient {
 	return &NasaClient{
 		Client: client.Client{
 			Name:    "Nasa",
-			BaseUrl: "https://images-api.nasa.gov/",
+			BaseUrl: "https://api.nasa.gov/",
 			ApiKey:  config.NasaAPIKey,
 		},
 		PhotosDir: filepath.Join(
@@ -42,27 +40,22 @@ type AstronomyPhotoOfTheDayResponse struct {
 }
 
 func (nc NasaClient) FetchAstronomyPhotoOfTheDay(dateString string) (AstronomyPhotoOfTheDayResponse, error) {
-	checkDateFormat := utils.CheckDateFormat(dateString, "2006-01-02")
-	if !checkDateFormat {
-		return AstronomyPhotoOfTheDayResponse{}, errors.New("invalid date format")
-	}
 	subUrl := "planetary/apod"
-	request := http.Request{
-		Method: "GET",
-		URL: &url.URL{
-			Scheme: "https",
-			Host:   "api.nasa.gov",
-			Path:   subUrl,
-		},
-		Header: http.Header{
-			"api_key": {nc.Client.ApiKey},
-		},
-	}
+	qs := "date=" + dateString
 
-	response, err := nc.Client.Do(&request)
+	request, err := http.NewRequest("GET", nc.Client.BaseUrl+subUrl+"?"+qs, nil)
 	if err != nil {
 		logging.ErrorLogger.Println(err)
 		return AstronomyPhotoOfTheDayResponse{}, err
+	}
+	request.Header.Set("X-API-Key", nc.Client.ApiKey)
+	response, err := nc.Client.Do(request)
+	if err != nil {
+		logging.ErrorLogger.Println(err)
+		return AstronomyPhotoOfTheDayResponse{}, err
+	}
+	if response.StatusCode != 200 {
+		return AstronomyPhotoOfTheDayResponse{}, errors.New("failed to fetch astronomy photo of the day response -" + response.Status)
 	}
 
 	defer response.Body.Close()
