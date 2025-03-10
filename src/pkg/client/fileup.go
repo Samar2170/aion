@@ -44,6 +44,8 @@ func (fc *FileupClient) UploadFile(r io.Reader, fileName string) error {
 		logging.ErrorLogger.Error().Err(err)
 		return err
 	}
+	writer.CreateFormField("folder")
+	writer.WriteField("folder", "/photos/nasa")
 	err = writer.Close()
 	if err != nil {
 		logging.ErrorLogger.Error().Err(err)
