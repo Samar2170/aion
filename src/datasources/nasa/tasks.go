@@ -10,10 +10,6 @@ import (
 )
 
 func GetAstronomyPhotoOfTheDay(dateString string) error {
-	// dateString, ok := date.(string)
-	// if !ok {
-	// 	return errors.New("invalid date format")
-	// }
 	checkDateFormat := utils.CheckDateFormat(dateString, "2006-01-02")
 	if !checkDateFormat {
 		return errors.New("invalid date format")

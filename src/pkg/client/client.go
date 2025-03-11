@@ -23,12 +23,13 @@ type Client struct {
 
 type RequestLog struct {
 	*gorm.Model
+	NameSpace  string
 	Url        string
 	StatusCode int
 	Time       time.Time
 }
 
-func (c *Client) Do(request *http.Request) (*http.Response, error) {
+func (c *Client) Do(request *http.Request, namespace string) (*http.Response, error) {
 	response, err := http.DefaultClient.Do(request)
 	if err != nil {
 		logging.ErrorLogger.Error().Err(err)
@@ -38,6 +39,7 @@ func (c *Client) Do(request *http.Request) (*http.Response, error) {
 		Url:        request.URL.String(),
 		StatusCode: response.StatusCode,
 		Time:       time.Now(),
+		NameSpace:  namespace,
 	}
 	err = db.DB.Create(&rq).Error
 	if err != nil {
@@ -60,7 +62,7 @@ func (c *Client) DownloadFile(url string, headers map[string]string) (bytes.Buff
 		logging.ErrorLogger.Error().Err(err)
 		return buffer, err
 	}
-	response, err := c.Do(request)
+	response, err := c.Do(request, "nasa")
 	if err != nil {
 		logging.ErrorLogger.Error().Err(err)
 		return buffer, err

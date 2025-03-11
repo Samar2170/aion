@@ -49,7 +49,7 @@ func (nc NasaClient) FetchAstronomyPhotoOfTheDay(dateString string) (AstronomyPh
 		return AstronomyPhotoOfTheDayResponse{}, err
 	}
 	request.Header.Set("X-API-Key", nc.Client.ApiKey)
-	response, err := nc.Client.Do(request)
+	response, err := nc.Client.Do(request, "nasa")
 	if err != nil {
 		logging.ErrorLogger.Println(err)
 		return AstronomyPhotoOfTheDayResponse{}, err
