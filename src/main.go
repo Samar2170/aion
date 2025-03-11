@@ -40,5 +40,4 @@ func RunCLI() {
 
 func main() {
 	RunCLI()
-
 }
