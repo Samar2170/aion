@@ -18,3 +18,11 @@
 4. a web app to show data.
 5. a post model that contains heading, content, photos.
 6. a photo api and storage service.
+
+
+#### company analysis
+1. valuation analysis
+2. margin analysis
+3. growth analysis
+4. ownership analysis
+5. comparative analysis - Sector wide

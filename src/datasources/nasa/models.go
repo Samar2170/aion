@@ -18,4 +18,6 @@ type NasaPhoto struct {
 	Url         string `json:"url"`
 	Date        string `json:"date"`
 	CopyRight   string `json:"copyright"`
+
+	SavedFileLink string `json:"saved_file_link"`
 }

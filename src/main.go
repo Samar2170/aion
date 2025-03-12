@@ -3,6 +3,7 @@ package main
 import (
 	"aion/cmd"
 	"aion/datasources/nasa"
+	"aion/frontend"
 	"fmt"
 	"os"
 	"time"
@@ -39,6 +40,20 @@ func RunCLI() {
 }
 
 func main() {
-	RunCLI()
+	frontend.StartEchoServer()
+	// RunCLI()
+	// i := 4
+	// for i < 25 {
+	// 	functionWithParams := cmd.FunctionWithParams{
+	// 		Name: "GetAstronomyPhotoOfTheDay",
+	// 		Fn:   nasa.GetAstronomyPhotoOfTheDay,
+	// 		Params: []interface{}{
+	// 			fmt.Sprintf("2024-03-%02d", i),
+	// 		},
+	// 	}
+	// 	cmd.RunJob(functionWithParams)
+	// 	i++
+	// 	time.Sleep(1 * time.Minute)
 
+	// }
 }
