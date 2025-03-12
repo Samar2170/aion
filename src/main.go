@@ -39,5 +39,19 @@ func RunCLI() {
 }
 
 func main() {
-	RunCLI()
+	// RunCLI()
+	i := 0
+	for i < 25 {
+		functionWithParams := cmd.FunctionWithParams{
+			Name: "GetAstronomyPhotoOfTheDay",
+			Fn:   nasa.GetAstronomyPhotoOfTheDay,
+			Params: []interface{}{
+				fmt.Sprintf("2024-03-%d", i),
+			},
+		}
+		cmd.RunJob(functionWithParams)
+		i++
+		time.Sleep(1 * time.Minute)
+
+	}
 }
