@@ -19,6 +19,8 @@ func RunCLI() {
 		Help:     "date",
 		Default:  time.Now().Format("2006-01-02"),
 	})
+	frontendServer := parser.NewCommand("server", "Run fs server to see data")
+
 	err := parser.Parse(os.Args)
 	if err != nil {
 		fmt.Print(parser.Usage(err))
@@ -33,6 +35,8 @@ func RunCLI() {
 			},
 		}
 		cmd.RunJob(functionWithParams)
+	} else if frontendServer.Happened() {
+		frontend.StartEchoServer()
 	} else {
 		fmt.Println(parser.Usage("No command provided"))
 		os.Exit(1)
@@ -40,8 +44,7 @@ func RunCLI() {
 }
 
 func main() {
-	frontend.StartEchoServer()
-	// RunCLI()
+	RunCLI()
 	// i := 4
 	// for i < 25 {
 	// 	functionWithParams := cmd.FunctionWithParams{
