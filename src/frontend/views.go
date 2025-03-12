@@ -1,8 +1,10 @@
 package frontend
 
 import (
+	"aion/config"
 	"aion/datasources/nasa"
 	"io"
+	"path/filepath"
 	"text/template"
 
 	"github.com/labstack/echo/v4"
@@ -37,14 +39,18 @@ func StartEchoServer() {
 	e.Use(middleware.Recover())
 
 	subgroup.GET("/nasa-apod/", listNasaApodFiles)
+	// http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir(filepath.Join(config.BaseDir, config.BaseDataDir)))))
+	e.Static("/data/", filepath.Join(config.BaseDir, config.BaseDataDir))
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
 func listNasaApodFiles(c echo.Context) error {
-	nasaFiles, err := nasa.GetNasaApod()
+	nasaPhotos, err := nasa.GetNasaApod()
 	if err != nil {
 		return err
 	}
-	return renderTemplate(c.Response(), "nasa-apod", nasaFiles, c, false)
+	return renderTemplate(c.Response(), "nasa-apod", map[string]interface{}{
+		"photos": nasaPhotos,
+	}, c, false)
 }

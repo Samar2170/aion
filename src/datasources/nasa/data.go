@@ -1,6 +1,8 @@
 package nasa
 
-import "aion/pkg/db"
+import (
+	"aion/pkg/db"
+)
 
 func GetNasaApod() ([]NasaPhoto, error) {
 	var nasaPhotos []NasaPhoto
@@ -8,5 +10,6 @@ func GetNasaApod() ([]NasaPhoto, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return nasaPhotos, nil
 }

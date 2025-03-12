@@ -1,11 +1,13 @@
 package nasa
 
 import (
-	"aion/pkg/client"
+	"aion/config"
 	"aion/pkg/db"
 	"aion/pkg/logging"
 	"aion/pkg/utils"
 	"errors"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -31,7 +33,7 @@ func GetAstronomyPhotoOfTheDay(dateString string) error {
 	if err != nil {
 		return utils.HandleError(err, "Nasa")
 	}
-	fu := client.NewFileupClient()
+	// fu := client.NewFileupClient()
 	image, err := nasaClient.Client.DownloadFile(resp.Hdurl, map[string]string{
 		"api_key": nasaClient.Client.ApiKey,
 	})
@@ -40,10 +42,23 @@ func GetAstronomyPhotoOfTheDay(dateString string) error {
 	}
 	urlSplit := strings.Split(resp.Hdurl, "/")
 	filename := urlSplit[len(urlSplit)-1]
-	err = fu.UploadFile(&image, filename)
+	file, err := os.Create(filepath.Join(config.BaseDir, config.BaseDataDir, NasaPhotosDir, filename))
 	if err != nil {
-		logging.ErrorLogger.Println("error while uploading image " + err.Error())
+		logging.ErrorLogger.Println("error while creating image locally" + err.Error())
 		return err
 	}
+	defer file.Close()
+	_, err = file.Write(image.Bytes())
+	if err != nil {
+		logging.ErrorLogger.Println("error while writing to dst file" + err.Error())
+		return err
+	}
+	// err = fu.UploadFile(&image, filename)
+	// if err != nil {
+	// 	logging.ErrorLogger.Println("error while uploading image " + err.Error())
+	// 	return err
+	// }
 	return nil
 }
+
+const NasaPhotosDir = "photos/nasa"
